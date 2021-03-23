@@ -22,7 +22,9 @@ export default class Gasp extends React.Component {
                 -1,
             ],
             table: [],
-            win: false
+            win: false,
+            size: 100,
+            lines: 10,
         }
     }
     componentDidMount() {
@@ -31,12 +33,22 @@ export default class Gasp extends React.Component {
     async resetGasp() {
         let newTable = [];
 
-        for (let i = 0; i < 16; i++) {
+        for (let i = 0; i < this.state.size; i++) {
             newTable.push(false);
         }
         await this.setState({
             table: newTable,
             win: false,
+            cellsToTry: [
+                -this.state.lines - 1,
+                -this.state.lines,
+                -this.state.lines + 1,
+                -1,
+                1,
+                this.state.lines - 1,
+                this.state.lines,
+                this.state.lines + 1
+            ]
         })
         this.checkWin();
     }
@@ -51,14 +63,15 @@ export default class Gasp extends React.Component {
         const { acceptedDistance } = this.state;
         let cells = [...this.state.cellsToTry];
         let returnCells = [];
-        let indexPosition = index % 4;
+        let indexPosition = index % (this.state.size / this.state.lines);
+        let lineWidth = this.state.size / this.state.lines;
 
-        if (indexPosition === 0 || indexPosition === 3) {
+        if (indexPosition === 0 || indexPosition === lineWidth - 1) {
             cells.forEach(cell => {
                 if (index + cell >= 0 && index + cell < this.state.table.length) {
-                    if (indexPosition === 0 && acceptedDistance.includes((cell + index) % 4)) {
+                    if (indexPosition === 0 && acceptedDistance.includes((cell + index) % lineWidth)) {
                         returnCells.push(cell);
-                    } else if (indexPosition === 3 && !acceptedDistance.includes((cell + index) % 4)) {
+                    } else if (indexPosition === lineWidth - 1 && !acceptedDistance.includes((cell + index) % lineWidth)) {
                         returnCells.push(cell);
                     }
                 }
@@ -88,7 +101,7 @@ export default class Gasp extends React.Component {
                 <div className="gaspTitle">
                     GASP
                 </div>
-                <div className="gaspTable">
+                <div className="gaspTable" style={{maxWidth: `${this.state.lines * 102}px`}}>
                     {this.state.table.map((element, index) => 
                         <div className="gaspCell" key={index}>
                             <div className={element ? "gaspCellWhite" : "gaspCellBlack"} onClick={() => this.gaspThisCell(index)}/>

@@ -106,7 +106,7 @@ select:focus {
     display: flex;
     width: 240px;
     min-height: 45px;
-    border-radius: 20px;
+    border-radius: 30px;
     align-items: center;
     justify-content: center;
     color: white;
@@ -129,7 +129,7 @@ select:focus {
     display: flex;
     width: 150px;
     min-height: 45px;
-    border-radius: 20px;
+    border-radius: 30px;
     align-items: center;
     justify-content: center;
     color: white;
@@ -137,6 +137,7 @@ select:focus {
     font-style: italic;
     font-weight: 600;
     cursor: pointer;
+    margin-bottom: 20px;
 }
 
 .gaspTitle {
@@ -144,4 +145,5 @@ select:focus {
     font-size: 60px;
     font-style: italic;
     font-weight: 800;
+    margin-top: 20px;
 }
