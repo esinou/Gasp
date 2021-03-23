@@ -57,6 +57,8 @@ select:focus {
     border-left: 2px solid var(--dark-color);
     border-top: 2px solid var(--dark-color);
     max-width: 408px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 .gaspCell {
@@ -119,4 +121,27 @@ select:focus {
     background-color: transparent;
     color: var(--win-color);
     width: 260px;
+}
+
+.gaspResetButton {
+    background-color: var(--win-color);
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, .16);
+    display: flex;
+    width: 150px;
+    min-height: 45px;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-style: italic;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.gaspTitle {
+    color: var(--dark-color);
+    font-size: 60px;
+    font-style: italic;
+    font-weight: 800;
 }

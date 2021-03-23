@@ -84,13 +84,21 @@ export default class Gasp extends React.Component {
     }
     renderGasp() {
         return (
-            <div className="gaspTable">
-                {this.state.table.map((element, index) => 
-                    <div className="gaspCell" key={index}>
-                        <div className={element ? "gaspCellWhite" : "gaspCellBlack"} onClick={() => this.gaspThisCell(index)}/>
-                    </div>
-                )}
-            </div>
+            <>
+                <div className="gaspTitle">
+                    GASP
+                </div>
+                <div className="gaspTable">
+                    {this.state.table.map((element, index) => 
+                        <div className="gaspCell" key={index}>
+                            <div className={element ? "gaspCellWhite" : "gaspCellBlack"} onClick={() => this.gaspThisCell(index)}/>
+                        </div>
+                    )}
+                </div>
+                <div className="gaspResetButton" onClick={() => this.resetGasp()}>
+                    Reset
+                </div>
+            </>
         );
     }
     renderWin() {
