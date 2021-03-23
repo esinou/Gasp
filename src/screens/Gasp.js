@@ -16,6 +16,11 @@ export default class Gasp extends React.Component {
                 4,
                 5
             ],
+            acceptedDistance: [
+                0,
+                1,
+                -1,
+            ],
             table: [],
             actualise: '',
         }
@@ -38,23 +43,35 @@ export default class Gasp extends React.Component {
             actualise: ''
         })
     }
+    patchCorner(index, cells) {
+        if (index === 0) {
+            cells.splice(index, 1)
+        }
+    }
     adaptCellsToTry(index) {
         let cells = [...this.state.cellsToTry];
+        let returnCells = [];
 
-        if (index !== 5 && index !== 6 && index !== 7 && index !== 8) {
-            if (index < 4) {
-                cells.splice(0, 3);
-            }
+        if (index !== 5 && index !== 6 && index !== 9 && index !== 10) {
+            console.log("I", index);
+            cells.forEach(cell => {
+                if (index + cell >= 0 && index + cell < this.state.table.length) {
+                    console.log("NEW", cell+index, "cell + index % 4", (cell + index) % 4);
+                    returnCells.push(cell);
+                }
+            })
+        } else {
+            returnCells = cells;
         }
-        return (cells);
+        return (returnCells);
     }
     gaspThisCell(index) {
+        const { acceptedDistance } = this.state;
         let newTable = this.state.table;
         let cellsToTry = this.adaptCellsToTry(index);
 
         cellsToTry.forEach(cell => {
-            if (newTable[index + cell] === false || newTable[index + cell]) {
-                console.log(!newTable[index + cell])
+            if (index + cell >= 0 && index + cell < newTable.length) {
                 newTable[index + cell] = !newTable[index + cell];
             }
         })
