@@ -6,7 +6,7 @@ export default class Gasp extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            cellToTry: [
+            cellsToTry: [
                 -5,
                 -4,
                 -3,
@@ -38,12 +38,22 @@ export default class Gasp extends React.Component {
             actualise: ''
         })
     }
-    gaspThisCell(index) {
-        const { cellToTry, table } = this.state;
-        let newTable = table;
+    adaptCellsToTry(index) {
+        let cells = [...this.state.cellsToTry];
 
-        cellToTry.forEach(cell => {
-            if (table[index + cell] === false || table[index + cell]) {
+        if (index !== 5 && index !== 6 && index !== 7 && index !== 8) {
+            if (index < 4) {
+                cells.splice(0, 3);
+            }
+        }
+        return (cells);
+    }
+    gaspThisCell(index) {
+        let newTable = this.state.table;
+        let cellsToTry = this.adaptCellsToTry(index);
+
+        cellsToTry.forEach(cell => {
+            if (newTable[index + cell] === false || newTable[index + cell]) {
                 console.log(!newTable[index + cell])
                 newTable[index + cell] = !newTable[index + cell];
             }
