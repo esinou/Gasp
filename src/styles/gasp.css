@@ -55,9 +55,7 @@ select:focus {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    border-left: 2px solid var(--dark-color);
-    border-top: 2px solid var(--dark-color);
-    max-width: 33%;
+    max-width: 35%;
     margin-top: 30px;
     margin-bottom: 30px;
 }

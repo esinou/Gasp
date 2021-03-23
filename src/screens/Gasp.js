@@ -19,10 +19,26 @@ export default class Gasp extends React.Component {
             inputError: false,
             inputErrorMsg: "",
             win: false,
+            width: 0,
+            height: 0,
+            mobile: false,
         }
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
-    componentDidMount() {
-
+    async componentDidMount() {
+        await this.updateWindowDimensions();
+        await window.addEventListener('resize', this.updateWindowDimensions);
+    }
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+    updateWindowDimensions() {
+        this.setState({ width: window.innerWidth, height: window.innerHeight });
+        if (window.innerWidth < 1250) {
+            this.setState({mobile: true});
+        } else {
+            this.setState({mobile: false});
+        }
     }
     handleChange = (propertyName, value) => {
         this.setState({ [propertyName]: value });
@@ -135,9 +151,15 @@ export default class Gasp extends React.Component {
                 <div className="gaspTitle">
                     GASP
                 </div>
-                <div className="gaspTable">
+                <div className="gaspTable" style={this.state.mobile ? {maxWidth: '80%'} : {}}>
                     {this.state.table.map((element, index) => 
-                        <div className="gaspCell" style={{width: `${window.innerWidth * 0.33 / this.state.lines - 2}px`, height: `${window.innerWidth * 0.33 / this.state.lines - 2}px`}} key={index}>
+                        <div
+                            className="gaspCell" 
+                            style={this.state.mobile ?
+                                {width: `${this.state.width * 0.75 / this.state.lines - 2}px`, height: `${this.state.width * 0.75 / this.state.lines - 2}px`}
+                                :
+                                {width: `${this.state.width * 0.33 / this.state.lines - 2}px`, height: `${this.state.width * 0.33 / this.state.lines - 2}px`}}
+                            key={index}>
                             <div className={element ? "gaspCellWhite" : "gaspCellBlack"} onClick={() => this.gaspThisCell(index)}/>
                         </div>
                     )}
