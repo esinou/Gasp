@@ -6,29 +6,46 @@ export default class Gasp extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            cellsToTry: [
-                -5,
-                -4,
-                -3,
-                -1,
-                1,
-                3,
-                4,
-                5
-            ],
+            cellsToTry: [],
             acceptedDistance: [
                 0,
                 1,
                 -1,
             ],
             table: [],
+            size: 0,
+            sizeInput: "",
+            lines: 0,
+            inputError: false,
+            inputErrorMsg: "",
             win: false,
-            size: 100,
-            lines: 10,
         }
     }
     componentDidMount() {
-        this.resetGasp();
+
+    }
+    handleChange = (propertyName, value) => {
+        this.setState({ [propertyName]: value });
+    }
+    async playGasp() {
+        this.setState({
+            inputError: false,
+            inputErrorMsg: "",
+        })
+
+        if (this.state.sizeInput < 4) {
+            this.setState({
+                inputError: true,
+                inputErrorMsg: "Size must be > 3",
+            })
+        } else {
+            console.log(this.state.sizeInput);
+            await this.setState({
+                size: parseInt(this.state.sizeInput) * parseInt(this.state.sizeInput),
+                lines: parseInt(this.state.sizeInput)
+            })
+            await this.resetGasp();    
+        }
     }
     async resetGasp() {
         let newTable = [];
@@ -36,6 +53,7 @@ export default class Gasp extends React.Component {
         for (let i = 0; i < this.state.size; i++) {
             newTable.push(false);
         }
+        console.log(Math.sqrt(this.state.size))
         await this.setState({
             table: newTable,
             win: false,
@@ -48,7 +66,8 @@ export default class Gasp extends React.Component {
                 this.state.lines - 1,
                 this.state.lines,
                 this.state.lines + 1
-            ]
+            ],
+            lines: Math.sqrt(this.state.size)
         })
         this.checkWin();
     }
@@ -126,13 +145,45 @@ export default class Gasp extends React.Component {
             </>
         );
     }
+    renderMenu() {
+        return (
+            <>
+                <div className="gaspTitle">
+                    GASP
+                </div>
+                <input
+                    type="number"
+                    className={this.state.inputError ? "gaspInputError" : "gaspInput"}
+                    placeholder="Enter map size (nb only)"
+                    value={this.state.sizeInput}
+                    onChange={(event) => this.handleChange("sizeInput", event.target.value)}
+                />
+                {this.state.inputError ?
+                <div className="gaspError">
+                    {this.state.inputErrorMsg}
+                </div>
+                :
+                <div/>}
+                <div className="gaspButton" onClick={() => this.playGasp()}>
+                    Play
+                </div>
+            </>
+        );
+    }
     render() {
         return (
             <div className="globalContainer">
-                {this.state.win === true ?
-                this.renderWin()
-                :
-                this.renderGasp()}
+                <>
+                    {this.state.size === 0 ?
+                    this.renderMenu()
+                    :
+                    <>
+                        {this.state.win === true ?
+                        this.renderWin()
+                        :
+                        this.renderGasp()}
+                    </>}
+                </>
             </div>
         )
     }
