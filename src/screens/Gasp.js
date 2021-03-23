@@ -27,19 +27,35 @@ export default class Gasp extends React.Component {
     handleChange = (propertyName, value) => {
         this.setState({ [propertyName]: value });
     }
+    async playAgain() {
+        await this.setState({
+            cellsToTry: [],
+            acceptedDistance: [
+                0,
+                1,
+                -1,
+            ],
+            table: [],
+            size: 0,
+            sizeInput: "",
+            lines: 0,
+            inputError: false,
+            inputErrorMsg: "",
+            win: false,
+        })
+    }
     async playGasp() {
-        this.setState({
+        await this.setState({
             inputError: false,
             inputErrorMsg: "",
         })
 
         if (this.state.sizeInput < 4) {
-            this.setState({
+            await this.setState({
                 inputError: true,
                 inputErrorMsg: "Size must be > 3",
             })
         } else {
-            console.log(this.state.sizeInput);
             await this.setState({
                 size: parseInt(this.state.sizeInput) * parseInt(this.state.sizeInput),
                 lines: parseInt(this.state.sizeInput)
@@ -53,7 +69,6 @@ export default class Gasp extends React.Component {
         for (let i = 0; i < this.state.size; i++) {
             newTable.push(false);
         }
-        console.log(Math.sqrt(this.state.size))
         await this.setState({
             table: newTable,
             win: false,
@@ -120,9 +135,9 @@ export default class Gasp extends React.Component {
                 <div className="gaspTitle">
                     GASP
                 </div>
-                <div className="gaspTable" style={{maxWidth: `${this.state.lines * 102}px`}}>
+                <div className="gaspTable">
                     {this.state.table.map((element, index) => 
-                        <div className="gaspCell" key={index}>
+                        <div className="gaspCell" style={{width: `${window.innerWidth * 0.33 / this.state.lines - 2}px`, height: `${window.innerWidth * 0.33 / this.state.lines - 2}px`}} key={index}>
                             <div className={element ? "gaspCellWhite" : "gaspCellBlack"} onClick={() => this.gaspThisCell(index)}/>
                         </div>
                     )}
@@ -139,7 +154,7 @@ export default class Gasp extends React.Component {
                 <div className="winText">
                     You won!
                 </div>
-                <div className="gaspButton" onClick={() => this.resetGasp()}>
+                <div className="gaspButton" onClick={() => this.playAgain()}>
                     Play again
                 </div>
             </>
