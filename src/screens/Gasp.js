@@ -22,30 +22,29 @@ export default class Gasp extends React.Component {
                 -1,
             ],
             table: [],
-            actualise: '',
+            win: false
         }
     }
     componentDidMount() {
         this.resetGasp();
     }
-    resetGasp() {
+    async resetGasp() {
         let newTable = [];
 
         for (let i = 0; i < 16; i++) {
             newTable.push(false);
         }
-        this.setState({
-            table: newTable
+        await this.setState({
+            table: newTable,
+            win: false,
         })
+        this.checkWin();
     }
-    actualiseState() {
-        this.setState({
-            actualise: ''
-        })
-    }
-    patchCorner(index, cells) {
-        if (index === 0) {
-            cells.splice(index, 1)
+    checkWin() {
+        if (!this.state.table.includes(false)) {
+            this.setState({
+                win: true
+            });
         }
     }
     adaptCellsToTry(index) {
@@ -69,7 +68,7 @@ export default class Gasp extends React.Component {
         }
         return (returnCells);
     }
-    gaspThisCell(index) {
+    async gaspThisCell(index) {
         let newTable = this.state.table;
         let cellsToTry = this.adaptCellsToTry(index);
 
@@ -77,21 +76,42 @@ export default class Gasp extends React.Component {
             if (index + cell >= 0 && index + cell < newTable.length) {
                 newTable[index + cell] = !newTable[index + cell];
             }
-        })
-        this.setState({
+        });
+        await this.setState({
             table: newTable
-        })
+        });
+        this.checkWin();
+    }
+    renderGasp() {
+        return (
+            <div className="gaspTable">
+                {this.state.table.map((element, index) => 
+                    <div className="gaspCell" key={index}>
+                        <div className={element ? "gaspCellWhite" : "gaspCellBlack"} onClick={() => this.gaspThisCell(index)}/>
+                    </div>
+                )}
+            </div>
+        );
+    }
+    renderWin() {
+        return (
+            <>
+                <div className="winText">
+                    You won!
+                </div>
+                <div className="gaspButton" onClick={() => this.resetGasp()}>
+                    Play again
+                </div>
+            </>
+        );
     }
     render() {
         return (
             <div className="globalContainer">
-                <div className="gaspTable">
-                    {this.state.table.map((element, index) => 
-                        <div className="gaspCell" key={index}>
-                            <div className={element ? "gaspCellWhite" : "gaspCellBlack"} onClick={() => this.gaspThisCell(index)}/>
-                        </div>
-                    )}
-                </div>
+                {this.state.win === true ?
+                this.renderWin()
+                :
+                this.renderGasp()}
             </div>
         )
     }
